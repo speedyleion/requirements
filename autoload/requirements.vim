@@ -6,6 +6,8 @@
 " requirements.  Thinking this should be requirement based with an easy listing
 " of the requirements found in the file.
 
+" Initialization {{{1
+let s:window_name = '__Requirements__'
 
 " s:GotoFileWindow() {{{1
 " Try to switch to the window that has requirements' current file loaded in it,
@@ -35,3 +37,23 @@ function! s:GotoFileWindow(fileinfo, ...) abort
     call s:goto_win('p', noauto)
 endfunction
 
+" s:goto_requirements() {{{1
+function! s:goto_requirements(...) abort
+    let noauto = a:0 > 0 ? a:1 : 0
+    call s:goto_win(bufwinnr(s:window_name), noauto)
+endfunction
+"
+" s:goto_win() {{{2
+function! s:goto_win(winnr, ...) abort
+    let cmd = type(a:winnr) == type(0) ? a:winnr . 'wincmd w'
+                                     \ : 'wincmd ' . a:winnr
+    let noauto = a:0 > 0 ? a:1 : 0
+
+    " call s:LogDebugMessage("goto_win(): " . cmd . ", " . noauto)
+
+    if noauto
+        noautocmd execute cmd
+    else
+        execute cmd
+    endif
+endfunction
