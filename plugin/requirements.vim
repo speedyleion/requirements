@@ -28,7 +28,7 @@ let s:options = [
     \ ['singleclick', 0],
     \ ['sort', 1],
     \ ['systemenc', &encoding],
-    \ ['width', 40],
+    \ ['height', 10],
     \ ['zoomwidth', 1],
 \ ]
 

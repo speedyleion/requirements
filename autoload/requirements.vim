@@ -31,7 +31,8 @@ function! s:OpenWindow(flags) abort
 
     " let openpos = g:tagbar_left ? 'topleft ' : 'botright '
     let openpos = 'botright '
-    exe 'silent keepalt ' . openpos . '10' . 'split ' . s:window_name
+    exe 'silent keepalt ' . openpos . g:requirements_height . 'split ' .
+                \ s:window_name
 
     call s:InitWindow(autoclose)
 

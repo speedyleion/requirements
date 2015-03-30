@@ -1,6 +1,5 @@
 import unittest
 import vimrunner
-# import pdb
 import os
 
 dirname = os.path.dirname(os.path.abspath(__file__))
@@ -26,6 +25,7 @@ class TestWindowCreation(unittest.TestCase):
 
     def tearDown(self):
         self.client.quit()
+        # pass
 
     def testOpenWindow(self):
         """
@@ -35,11 +35,18 @@ class TestWindowCreation(unittest.TestCase):
         self.client.edit('any_file')
 
         self.client.command("RequirementsOpen")
-        bufname = self.client.eval('bufname(' + self.client.get_active_buffer()
-                                   + ')')
+
+        bufnum = self.client.get_active_buffer()
+        bufname = self.client.eval('bufname(' + bufnum + ')')
 
         self.assertEqual(bufname, '__Requirements__', "Expecting "
                          "`__Requirements__`; Got %s"
                          %(bufname))
 
+        height = int(self.client.eval('winheight(' + bufnum + ')'))
+        expected_height = int(self.vim.remote_expr('g:requirements_height'))
+        self.assertEqual(height, expected_height, "Expected %s, but got %s."
+                         %(expected_height, height))
 
+if __name__ == '__main__':
+    unittest.main()
