@@ -32,8 +32,6 @@ class TestWindowCreation(unittest.TestCase):
         This will test the opening of the window and that it is in the correct
         location and it obeys the global variables set.
         """
-        self.client.edit('any_file')
-
         self.client.command("RequirementsOpen")
 
         bufnum = self.client.get_active_buffer()
