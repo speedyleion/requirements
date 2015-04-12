@@ -29,8 +29,7 @@ function! s:OpenWindow(flags) abort
         return
     endif
 
-    " let openpos = g:tagbar_left ? 'topleft ' : 'botright '
-    let openpos = 'botright '
+    let openpos = g:requirements_top ? 'topleft ' : 'botright '
     exe 'silent keepalt ' . openpos . g:requirements_height . 'split ' .
                 \ s:window_name
 

@@ -21,7 +21,7 @@ let s:options = [
     \ ['foldlevel', 99],
     \ ['hide_nonpublic', 0],
     \ ['indent', 2],
-    \ ['left', 0],
+    \ ['top', 0],
     \ ['previewwin_pos', 'topleft'],
     \ ['show_visibility', 1],
     \ ['show_linenumbers', 0],
