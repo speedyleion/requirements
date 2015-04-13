@@ -9,6 +9,33 @@
 " Initialization {{{1
 let s:window_name = '__Requirements__'
 
+function! s:GetRequirementTags(buffer) abort
+    " Call the python functionality here, for now just hack it up.
+    " Envision returning back a list of requirement numbers
+    return [
+           \ { 'requirement' : 'R12345678', 'text' : 'The first requirement',  'lines' : '5,10,15' }, 
+           \ { 'requirement' : 'R98765432', 'text' : 'The second requirement', 'lines' : '10,20,30' }
+           \ ]
+endfunction
+
+function! s:PrintRequirements(req_tags) abort
+    setlocal modifiable
+    silent %delete _
+    for req in a:req_tags
+        for [ key, value ] in items(req)
+            silent put =key . ' : ' . value
+        endfor
+    endfor
+    setlocal nomodifiable
+endfunction
+
+function! s:ProcessFile(fname) abort
+    let req_tags = s:GetRequirementTags('foo')
+    
+    " Not sure about having one function to do it all here...???
+    call s:PrintRequirements(req_tags)
+endfunction
+
 " s:OpenWindow() {{{2
 function! s:OpenWindow(flags) abort
 
@@ -84,5 +111,8 @@ endfunction
 function! requirements#OpenWindow(...) abort
     let flags = a:0 > 0 ? a:1 : ''
     call s:OpenWindow(flags)
+    "Might not be ideal, but for now just print it out
+    call s:ProcessFile('foo')
+
 endfunction
 
