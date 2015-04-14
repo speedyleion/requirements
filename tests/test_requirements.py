@@ -33,6 +33,7 @@ class TestWindowCreation(unittest.TestCase):
         location and it obeys the global variables set.
         """
         self.client.command("RequirementsOpen")
+        import pdb; pdb.set_trace()  # XXX BREAKPOINT
 
         winnr = self.client.eval('winnr()')
         self.assertEqual(winnr, '2', "Requirements window should be the "
@@ -59,7 +60,6 @@ class TestWindowCreation(unittest.TestCase):
         expected_height = 5
         self.client.command('let g:requirements_height=' + str(expected_height))
         self.client.command("RequirementsOpen")
-        import pdb; pdb.set_trace()  # XXX BREAKPOINT
 
         winnr = self.client.eval('winnr()')
         self.assertEqual(winnr, '1', "Requirements buffer should be the "

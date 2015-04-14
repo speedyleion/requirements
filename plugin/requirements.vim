@@ -37,6 +37,15 @@ for [opt, val] in s:options
 endfor
 unlet s:options
 
+if !exists('g:requirements_iconchars')
+    if has('multi_byte') && has('unix') && &encoding == 'utf-8' &&
+     \ (empty(&termencoding) || &termencoding == 'utf-8')
+        let g:requirements_iconchars = ['▶', '▼']
+    else
+        let g:requirements_iconchars = ['+', '-']
+    endif
+endif
+
 let s:keymaps = [
     \ ['jump',          '<CR>'],
     \ ['preview',       'p'],

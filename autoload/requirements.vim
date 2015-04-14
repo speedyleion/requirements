@@ -8,23 +8,94 @@
 
 " Initialization {{{1
 let s:window_name = '__Requirements__'
+let s:icon_closed = g:requirements_iconchars[0]
+let s:icon_open   = g:requirements_iconchars[1]
+let s:short_help      = 1
+
+
+" s:ToggleHelp() {{{2
+function! s:ToggleHelp() abort
+    let s:short_help = !s:short_help
+
+    " Prevent highlighting from being off after adding/removing the help text
+    match none
+
+    call s:PrintRequirements("foo")
+
+    execute 1
+    redraw
+endfunction
+
+" s:PrintHelp() {{{2
+function! s:PrintHelp() abort
+    if !g:requirements_compact && s:short_help
+        silent 0put ='\" Press <F1> or ? for help'
+        silent  put _
+    elseif !s:short_help
+        silent 0put ='\" Requirements keybindings'
+        silent  put ='\"'
+        silent  put ='\" --------- General ---------'
+        silent  put ='\" ' . s:get_map_str('jump') . ': Jump to Requirement Tag'
+        silent  put ='\" ' . s:get_map_str('preview') . ': As above, but stay in'
+        silent  put ='\"    Requirements window'
+        silent  put ='\" ' . s:get_map_str('previewwin') . ': Show Requirement in preview window'
+        silent  put ='\" ' . s:get_map_str('nexttag') . ': Go to next Requirement tag'
+        silent  put ='\" ' . s:get_map_str('prevtag') . ': Go to previous Requirement tag'
+        silent  put ='\"'
+        silent  put ='\" ---------- Folds ----------'
+        silent  put ='\" ' . s:get_map_str('openfold') . ': Open fold'
+        silent  put ='\" ' . s:get_map_str('closefold') . ': Close fold'
+        silent  put ='\" ' . s:get_map_str('togglefold') . ': Toggle fold'
+        silent  put ='\" ' . s:get_map_str('openallfolds') . ': Open all folds'
+        silent  put ='\" ' . s:get_map_str('closeallfolds') . ': Close all folds'
+        silent  put ='\"'
+        silent  put ='\" ---------- Misc -----------'
+        silent  put ='\" ' . s:get_map_str('togglesort') . ': Toggle sort'
+        silent  put ='\" ' . s:get_map_str('zoomwin') . ': Zoom window in/out'
+        silent  put ='\" ' . s:get_map_str('close') . ': Close window'
+        silent  put ='\" ' . s:get_map_str('help') . ': Toggle help'
+        silent  put _
+    endif
+endfunction
+
+function! s:get_map_str(map) abort
+    let def = get(g:, 'requirements_map_' . a:map)
+    if type(def) == type("")
+        return def
+    else
+        return join(def, ', ')
+    endif
+endfunction
 
 function! s:GetRequirementTags(buffer) abort
     " Call the python functionality here, for now just hack it up.
     " Envision returning back a list of requirement numbers
     return [
-           \ { 'requirement' : 'R12345678', 'text' : 'The first requirement',  'lines' : '5,10,15' }, 
-           \ { 'requirement' : 'R98765432', 'text' : 'The second requirement', 'lines' : '10,20,30' }
+           \ { 'requirement' : 'R12345678', 'text' : 'The first requirement',  'lines' : [5,10,15] }, 
+           \ { 'requirement' : 'R98765432', 'text' : 'The second requirement', 'lines' : [10,20,30] }
            \ ]
 endfunction
 
 function! s:PrintRequirements(req_tags) abort
     setlocal modifiable
     silent %delete _
+    call s:PrintHelp()
+
+    if 0 "kindtag.isFolded()
+        let foldmarker = s:icon_closed
+    else
+        let foldmarker = s:icon_open
+    endif
+
     for req in a:req_tags
-        for [ key, value ] in items(req)
-            silent put =key . ' : ' . value
+        silent put =foldmarker . ' ' . req.requirement
+        silent put =repeat(' ', g:requirements_indent * 2) . req.text
+        silent put _
+        silent put =repeat(' ', g:requirements_indent * 2) . foldmarker . ' Lines'
+        for line in req.lines
+            silent put =repeat(' ', g:requirements_indent * 3) . line
         endfor
+        silent put _
     endfor
     setlocal nomodifiable
 endfunction
