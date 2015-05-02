@@ -11,15 +11,12 @@ execute "syntax match RequirementsFoldIcon '" . s:pattern . "'"
 let s:pattern = '\(^[' . s:ics . '] \?\)\@<=[^-+: ]\+[^:]\+$'
 execute "syntax match RequirementsKind '" . s:pattern . "'"
 
-syntax match RequirementsHelp      '^".*' contains=RequirementsHelpKey,RequirementsHelpTitle
-syntax match RequirementsHelpKey   '" \zs.*\ze:' contained
-syntax match RequirementsHelpTitle '" \zs-\+ \w\+ -\+' contained
-
-highlight default link RequirementsHelp       Comment
-highlight default link RequirementsHelpKey    Identifier
-highlight default link RequirementsHelpTitle  PreProc
+syntax match RequirementsLine      '\d' contained
+let s:pattern = '\([' . s:ics . '] \?\)\@<=Lines$'
+execute "syntax region RequirementsLineGroup matchgroup=RequirementsLineGroupStart start='" . s:pattern . "' end='^$' contains=RequirementsLine" 
 highlight default link RequirementsFoldIcon   Statement
-highlight default link RequirementsHighlight  Search
 highlight default link RequirementsKind       Identifier
+highlight default link RequirementsLine       Constant
+highlight default link RequirementsLineGroupStart       Comment
 
 let b:current_syntax = "requirements"
