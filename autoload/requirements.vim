@@ -173,7 +173,9 @@ function! s:InitWindow(autoclose) abort
     " Reset fold settings in case a plugin set them globally to something
     " expensive. Apparently 'foldexpr' gets executed even if 'foldenable' is
     " off, and then for every appended line (like with :put).
-    setlocal foldmethod&
+    setlocal foldmethod=syntax
+    setlocal fillchars=
+    setlocal foldtext=getline(v:foldstart)
     setlocal foldexpr&
 
 endfunction
