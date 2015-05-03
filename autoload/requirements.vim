@@ -6,6 +6,14 @@
 " requirements.  Thinking this should be requirement based with an easy listing
 " of the requirements found in the file.
 
+" Python imports {{{1
+let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
+py import sys
+" May want to consider prepending this
+exe 'python sys.path = sys.path + ["' . s:script_folder_path . '/../misc"]' 
+py import requirements
+"}}}
+
 " Initialization {{{1
 let s:window_name = '__Requirements__'
 let s:icon_closed = g:requirements_iconchars[0]
@@ -80,6 +88,7 @@ function! s:PrintRequirements(req_tags) abort
     endif
 
     for req in a:req_tags
+        echom req
         silent put =foldmarker . ' ' . req.requirement
         silent put =repeat(' ', g:requirements_indent * 2) . req.text
         silent put _
@@ -93,9 +102,10 @@ function! s:PrintRequirements(req_tags) abort
 endfunction
 
 function! s:ProcessBuffer(buf_num) abort
-    let req_tags = py requirements.GetRequirementsFromVIM(a:buf_num)
+    exe 'python requirements.GetRequirementsFromVIM('.a:buf_num.')'
     
     " Not sure about having one function to do it all here...???
+    let req_tags = getbufvar(a:buf_num, 'requirements')
     call s:PrintRequirements(req_tags)
 endfunction
 
@@ -181,7 +191,7 @@ function! requirements#OpenWindow(...) abort
     let flags = a:0 > 0 ? a:1 : ''
     let l:buf_num =  s:OpenWindow(flags)
     
-    call s:ProcessFile(l:buf_num)
+    call s:ProcessBuffer(l:buf_num)
 
 endfunction
 

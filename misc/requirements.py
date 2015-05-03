@@ -4,7 +4,7 @@ This file will retrieve requirements text from a file.
 
 import vim
 import re
-form collections import defaultdict
+from collections import defaultdict
 
 REQUIREMENT_STRING = re.compile('R\d{8}')
 def GetRequirementsFromVIM(buf_number):
@@ -16,7 +16,7 @@ def GetRequirementsFromVIM(buf_number):
     Parameters:
         - buf_number: the number of the buffer to search for requirements in.
         
-    Returns:
+    Sets the buffer variable 'requirements' in buf_number to the following:
         A list where each element is a dictionary.  The dictionaries will have
         three keys:
             - requirement: The requirement number for the dictionary.
@@ -34,23 +34,23 @@ def GetRequirementsFromVIM(buf_number):
             req_dict['requirement'].append(i)
 
 
-    req_list = []
+    req_list = vim.List()
     # Now build up the return list
     for key in req_dict:
-        local_dict = {}
+        local_dict = vim.Dictionary()
         local_dict['requirement'] = key
         local_dict['text'] = GetRequirement(key)
-        local_dict['lines'] = req_dict[key]
-        req_list.append(local_dict)
+        local_dict['lines'] = vim.List(req_dict[key])
+        req_list.extend([local_dict])
 
-    return req_list
+    buf.vars['requirements'] = req_list
 
 
 def GetRequirement(requirement):
     """
     This function will get the requirement text for the given requirement.
     """
-    return "The requirement text for: " . requirement
+    return "The requirement text for: " + requirement
         
 
 
