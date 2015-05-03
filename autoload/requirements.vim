@@ -67,20 +67,12 @@ function! s:get_map_str(map) abort
     endif
 endfunction
 
-function! s:GetRequirementTags(buffer) abort
-    " Call the python functionality here, for now just hack it up.
-    " Envision returning back a list of requirement numbers
-    return [
-           \ { 'requirement' : 'R12345678', 'text' : 'The first requirement',  'lines' : [5,10,15] }, 
-           \ { 'requirement' : 'R98765432', 'text' : 'The second requirement', 'lines' : [10,20,30] }
-           \ ]
-endfunction
-
 function! s:PrintRequirements(req_tags) abort
     setlocal modifiable
     silent %delete _
-    call s:PrintHelp()
+    " call s:PrintHelp()
 
+    " Need to figure out what to do about folds, manual or use vim somehow
     if 0 "kindtag.isFolded()
         let foldmarker = s:icon_closed
     else
@@ -100,8 +92,8 @@ function! s:PrintRequirements(req_tags) abort
     setlocal nomodifiable
 endfunction
 
-function! s:ProcessFile(fname) abort
-    let req_tags = s:GetRequirementTags('foo')
+function! s:ProcessBuffer(buf_num) abort
+    let req_tags = py requirements.GetRequirementsFromRawText(a:buf_num)
     
     " Not sure about having one function to do it all here...???
     call s:PrintRequirements(req_tags)
@@ -115,6 +107,7 @@ function! s:OpenWindow(flags) abort
     let autoclose = a:flags =~# 'c'
 
     let curfile = fnamemodify(bufname('%'), ':p')
+    let buf_num = bufnr('%')
     let curline = line('.')
 
     " If the requirements window is already open check jump flag Also set the
@@ -132,6 +125,9 @@ function! s:OpenWindow(flags) abort
                 \ s:window_name
 
     call s:InitWindow(autoclose)
+
+    " Return the buffer number of the current file
+    return buf_num
 
 endfunction
 
@@ -183,9 +179,9 @@ endfunction
 " requirements#OpenWindow() {{{1
 function! requirements#OpenWindow(...) abort
     let flags = a:0 > 0 ? a:1 : ''
-    call s:OpenWindow(flags)
-    "Might not be ideal, but for now just print it out
-    call s:ProcessFile('foo')
+    let l:buf_num =  s:OpenWindow(flags)
+    
+    call s:ProcessFile(l:buf_num)
 
 endfunction
 
