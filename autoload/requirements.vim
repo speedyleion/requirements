@@ -93,7 +93,7 @@ function! s:PrintRequirements(req_tags) abort
 endfunction
 
 function! s:ProcessBuffer(buf_num) abort
-    let req_tags = py requirements.GetRequirementsFromRawText(a:buf_num)
+    let req_tags = py requirements.GetRequirementsFromVIM(a:buf_num)
     
     " Not sure about having one function to do it all here...???
     call s:PrintRequirements(req_tags)
