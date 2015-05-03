@@ -88,7 +88,6 @@ function! s:PrintRequirements(req_tags) abort
     endif
 
     for req in a:req_tags
-        echom req
         silent put =foldmarker . ' ' . req.requirement
         silent put =repeat(' ', g:requirements_indent * 2) . req.text
         silent put _

@@ -30,8 +30,8 @@ def GetRequirementsFromVIM(buf_number):
     buf = vim.buffers[buf_number]
     req_dict = defaultdict(list)
     for i, line in enumerate(buf):
-        for requiement in re.finditer(REQUIREMENT_STRING, line):
-            req_dict['requirement'].append(i)
+        for requirement in re.finditer(REQUIREMENT_STRING, line):
+            req_dict[requirement.group(0)].append(i)
 
 
     req_list = vim.List()
